@@ -1,9 +1,11 @@
+import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { ArrowRight, Baby, BookOpen, Briefcase, Home, Heart, Users, Search, Bell, User } from "lucide-react";
+import { ArrowRight, Baby, BookOpen, Briefcase, Home, Heart, Users, Search, Bell, User, Globe } from "lucide-react";
 import { useState } from "react";
 import { Link } from "wouter";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const lifeEvents = [
   {
@@ -84,6 +86,7 @@ const announcements = [
 export default function HomePage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedEvent, setSelectedEvent] = useState<string | null>(null);
+  const { language, toggleLanguage, t } = useLanguage();
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
@@ -95,8 +98,8 @@ export default function HomePage() {
               <span className="text-white font-bold text-lg">ই</span>
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-slate-900">eGov.bd</h1>
-              <p className="text-xs text-slate-500">Government Services Portal</p>
+              <h1 className="text-2xl font-bold text-slate-900">{t('header.title')}</h1>
+              <p className="text-xs text-slate-500">{t('header.subtitle')}</p>
             </div>
           </div>
           <div className="flex items-center gap-4">
@@ -107,6 +110,14 @@ export default function HomePage() {
             <button className="p-2 text-slate-600 hover:text-slate-900 transition">
               <User className="w-5 h-5" />
             </button>
+            <button
+              onClick={toggleLanguage}
+              className="flex items-center gap-1 px-3 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition"
+              title={t('header.language')}
+            >
+              <Globe className="w-4 h-4" />
+              <span className="font-bold">{language.toUpperCase()}</span>
+            </button>
           </div>
         </div>
       </header>
@@ -116,10 +127,10 @@ export default function HomePage() {
         <div className="container max-w-7xl mx-auto px-4">
           <div className="max-w-2xl">
             <h2 className="text-4xl md:text-5xl font-bold mb-4">
-              Find Government Services Easily
+              {t('home.hero.title')}
             </h2>
             <p className="text-lg text-green-100 mb-8">
-              Access all government services in one place. From birth registration to business licenses.
+              {t('home.hero.description')}
             </p>
             
             {/* Search Bar */}
@@ -127,7 +138,7 @@ export default function HomePage() {
               <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
               <Input
                 type="text"
-                placeholder="Search services, documents, or life events..."
+                placeholder={t('home.search.placeholder')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-12 pr-4 py-3 w-full rounded-lg text-slate-900 placeholder-slate-500"
@@ -141,7 +152,7 @@ export default function HomePage() {
       <main className="container max-w-7xl mx-auto px-4 py-12">
         {/* Quick Links */}
         <section className="mb-16">
-          <h3 className="text-2xl font-bold text-slate-900 mb-6">Quick Access</h3>
+          <h3 className="text-2xl font-bold text-slate-900 mb-6">{t('home.quickAccess')}</h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {quickServices.map((service) => (
               <button
@@ -159,12 +170,12 @@ export default function HomePage() {
         <section className="mb-16">
           <div className="flex items-center justify-between mb-8">
             <div>
-              <h3 className="text-2xl font-bold text-slate-900">Life Events</h3>
-              <p className="text-slate-600 mt-1">Find services relevant to your life situation</p>
+              <h3 className="text-2xl font-bold text-slate-900">{t('home.lifeEvents')}</h3>
+              <p className="text-slate-600 mt-1">{t('home.lifeEvents.description')}</p>
             </div>
             <Link href="/services">
               <Button variant="outline" className="gap-2">
-                View All Services <ArrowRight className="w-4 h-4" />
+                {t('home.viewAllServices')} <ArrowRight className="w-4 h-4" />
               </Button>
             </Link>
           </div>
@@ -186,15 +197,15 @@ export default function HomePage() {
                       </div>
                       <ArrowRight className="w-5 h-5 text-slate-300 group-hover:text-green-600 group-hover:translate-x-1 transition" />
                     </div>
-                    <CardTitle className="text-lg mt-4">{event.title}</CardTitle>
-                    <CardDescription>{event.description}</CardDescription>
+                <CardTitle className="text-lg mt-4">{t(`home.${event.id}.title` as any)}</CardTitle>
+                <CardDescription>{t(`home.${event.id}.description` as any)}</CardDescription>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-2">
-                      {event.services.map((service) => (
+                      {event.services.map((service, idx) => (
                         <div key={service} className="flex items-center gap-2 text-sm text-slate-600">
                           <div className="w-1.5 h-1.5 rounded-full bg-green-600"></div>
-                          {service}
+                          {t(`home.${event.id}.service${idx + 1}` as any)}
                         </div>
                       ))}
                     </div>
@@ -207,7 +218,7 @@ export default function HomePage() {
 
         {/* Announcements Section */}
         <section className="mb-16">
-          <h3 className="text-2xl font-bold text-slate-900 mb-6">Latest Announcements</h3>
+          <h3 className="text-2xl font-bold text-slate-900 mb-6">{t('home.announcements')}</h3>
           <div className="space-y-4">
             {announcements.map((announcement, index) => (
               <Card key={index} className="border-slate-200 hover:shadow-md transition">
@@ -227,11 +238,11 @@ export default function HomePage() {
 
         {/* Call to Action */}
         <section className="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-lg p-8 text-center">
-          <h3 className="text-2xl font-bold text-slate-900 mb-2">New to eGov.bd?</h3>
-          <p className="text-slate-600 mb-6">Create your account to access personalized services and track your applications.</p>
+          <h3 className="text-2xl font-bold text-slate-900 mb-2">{t('home.cta.title')}</h3>
+          <p className="text-slate-600 mb-6">{t('home.cta.description')}</p>
           <div className="flex gap-4 justify-center">
-            <Button className="bg-green-600 hover:bg-green-700">Create Account</Button>
-            <Button variant="outline">Learn More</Button>
+            <Button className="bg-green-600 hover:bg-green-700">{t('home.cta.createAccount')}</Button>
+            <Button variant="outline">{t('home.cta.learnMore')}</Button>
           </div>
         </section>
       </main>
@@ -241,36 +252,36 @@ export default function HomePage() {
         <div className="container max-w-7xl mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
             <div>
-              <h4 className="text-white font-bold mb-4">About eGov.bd</h4>
-              <p className="text-sm">Providing seamless access to government services for all citizens of Bangladesh.</p>
+              <h4 className="text-white font-bold mb-4">{t('footer.about')}</h4>
+              <p className="text-sm">{t('footer.about.description')}</p>
             </div>
             <div>
-              <h4 className="text-white font-bold mb-4">Services</h4>
+              <h4 className="text-white font-bold mb-4">{t('footer.services')}</h4>
               <ul className="space-y-2 text-sm">
-                <li><a href="#" className="hover:text-white transition">Service Directory</a></li>
-                <li><a href="#" className="hover:text-white transition">My Dashboard</a></li>
-                <li><a href="#" className="hover:text-white transition">My Documents</a></li>
+                <li><a href="#" className="hover:text-white transition">{t('footer.serviceDirectory')}</a></li>
+                <li><a href="#" className="hover:text-white transition">{t('footer.myDashboard')}</a></li>
+                <li><a href="#" className="hover:text-white transition">{t('footer.myDocuments')}</a></li>
               </ul>
             </div>
             <div>
-              <h4 className="text-white font-bold mb-4">Support</h4>
+              <h4 className="text-white font-bold mb-4">{t('footer.support')}</h4>
               <ul className="space-y-2 text-sm">
-                <li><a href="#" className="hover:text-white transition">Help Center</a></li>
-                <li><a href="#" className="hover:text-white transition">Contact Us</a></li>
-                <li><a href="#" className="hover:text-white transition">FAQs</a></li>
+                <li><a href="#" className="hover:text-white transition">{t('footer.helpCenter')}</a></li>
+                <li><a href="#" className="hover:text-white transition">{t('footer.contactUs')}</a></li>
+                <li><a href="#" className="hover:text-white transition">{t('footer.faqs')}</a></li>
               </ul>
             </div>
             <div>
-              <h4 className="text-white font-bold mb-4">Legal</h4>
+              <h4 className="text-white font-bold mb-4">{t('footer.legal')}</h4>
               <ul className="space-y-2 text-sm">
-                <li><a href="#" className="hover:text-white transition">Privacy Policy</a></li>
-                <li><a href="#" className="hover:text-white transition">Terms of Service</a></li>
-                <li><a href="#" className="hover:text-white transition">Accessibility</a></li>
+                <li><a href="#" className="hover:text-white transition">{t('footer.privacyPolicy')}</a></li>
+                <li><a href="#" className="hover:text-white transition">{t('footer.termsOfService')}</a></li>
+                <li><a href="#" className="hover:text-white transition">{t('footer.accessibility')}</a></li>
               </ul>
             </div>
           </div>
           <div className="border-t border-slate-700 pt-8 text-center text-sm">
-            <p>&copy; 2026 eGov.bd - Government of Bangladesh. All rights reserved.</p>
+            <p>{t('footer.copyright')}</p>
           </div>
         </div>
       </footer>
