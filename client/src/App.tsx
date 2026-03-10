@@ -1,5 +1,5 @@
 import { Toaster } from "@/components/ui/sonner";
-import { FloatingChatMultiModel } from "@/components/FloatingChatMultiModel";
+import { KiddoChat } from "@/components/KiddoChat";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
 import { Route, Switch } from "wouter";
@@ -38,7 +38,7 @@ function App() {
           <TooltipProvider>
 	            <Toaster />
 	            <Router />
-	            <FloatingChatMultiModel />
+	            <KiddoChat />
           </TooltipProvider>
         </LanguageProvider>
       </ThemeProvider>

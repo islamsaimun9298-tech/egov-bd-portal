@@ -4,6 +4,7 @@ import { systemRouter } from "./_core/systemRouter";
 import { aiRouter } from "./aiRouter";
 import { serviceRouter } from "./serviceRouter";
 import { multiModelRouter } from "./multiModelRouter";
+import { kiddoRouter } from "./kiddoRouter";
 import { publicProcedure, router } from "./_core/trpc";
 
 export const appRouter = router({
@@ -12,6 +13,7 @@ export const appRouter = router({
   ai: aiRouter,
   services: serviceRouter,
   multiModel: multiModelRouter,
+  kiddo: kiddoRouter,
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),
     logout: publicProcedure.mutation(({ ctx }) => {
